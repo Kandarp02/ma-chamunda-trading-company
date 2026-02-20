@@ -40,8 +40,21 @@ function getPool(): Pool {
   return pool;
 }
 
-// Execute query helper
+// Execute query helper with auto-initialization
+let isInitialized = false;
+
 export async function query<T = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+  // Auto-initialize on first query
+  if (!isInitialized && process.env.DATABASE_URL) {
+    try {
+      await initializeDatabase();
+      isInitialized = true;
+    } catch (err) {
+      console.error('Auto-initialization failed:', err);
+      // Continue anyway, tables might already exist
+    }
+  }
+  
   const client = await getPool().connect();
   try {
     return await client.query(text, params);
