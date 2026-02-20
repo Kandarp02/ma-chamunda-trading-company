@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
-import { getDatabase } from '@/lib/database';
+import { query } from '@/lib/database';
 
 // Helper to format date for display
 function formatDate(dateStr: string): string {
@@ -41,20 +41,8 @@ export async function GET(request: NextRequest) {
 
     console.log('Purchase report request:', { year, month, date });
 
-    let db;
-    try {
-      db = getDatabase();
-      console.log('Database connection successful');
-    } catch (dbError) {
-      console.error('Database connection error:', dbError);
-      return NextResponse.json(
-        { success: false, error: 'Database connection failed' },
-        { status: 500 }
-      );
-    }
-    
-    // Build query based on filters
-    let query = `
+    // Build query based on filters - using PostgreSQL syntax
+    let sqlQuery = `
       SELECT 
         pb.id as bill_id,
         pb.bill_date,
@@ -71,52 +59,43 @@ export async function GET(request: NextRequest) {
         pbi.quantity,
         pbi.rate,
         pbi.total as item_total
-      FROM PurchaseBills pb
-      LEFT JOIN PurchaseBillItems pbi ON pb.id = pbi.bill_id
+      FROM purchase_bills pb
+      LEFT JOIN purchase_bill_items pbi ON pb.id = pbi.bill_id
       WHERE 1=1
     `;
     
     const params: any[] = [];
+    let paramIndex = 1;
     
     if (date) {
       // Specific date filter
-      query += ` AND pb.bill_date = ?`;
+      sqlQuery += ` AND pb.bill_date = $${paramIndex++}`;
       params.push(date);
     } else if (year && month) {
-      // Year + month filter
-      query += ` AND strftime('%Y', pb.bill_date) = ? AND strftime('%m', pb.bill_date) = ?`;
-      params.push(year, month.padStart(2, '0'));
+      // Year + month filter - PostgreSQL uses EXTRACT or TO_CHAR
+      sqlQuery += ` AND EXTRACT(YEAR FROM pb.bill_date) = $${paramIndex++} AND EXTRACT(MONTH FROM pb.bill_date) = $${paramIndex++}`;
+      params.push(year, month);
     } else if (year) {
       // Year only filter
-      query += ` AND strftime('%Y', pb.bill_date) = ?`;
+      sqlQuery += ` AND EXTRACT(YEAR FROM pb.bill_date) = $${paramIndex++}`;
       params.push(year);
     }
     
-    query += ` ORDER BY pb.bill_date ASC, pb.id ASC`;
+    sqlQuery += ` ORDER BY pb.bill_date ASC, pb.id ASC`;
     
-    console.log('Executing query:', query);
+    console.log('Executing query:', sqlQuery);
     console.log('Query params:', params);
     
     let rows;
     try {
       const startTime = Date.now();
-      rows = db.prepare(query).all(...params);
+      const result = await query(sqlQuery, params);
+      rows = result.rows;
       const endTime = Date.now();
       console.log('Query executed successfully, rows found:', rows.length);
       console.log('Query execution time:', endTime - startTime, 'ms');
-      console.log('Query execution details:', {
-        query,
-        params,
-        rows: rows.length,
-        executionTime: endTime - startTime
-      });
     } catch (queryError) {
       console.error('Query execution error:', queryError);
-      console.error('Query execution details:', {
-        query,
-        params,
-        error: queryError
-      });
       return NextResponse.json(
         { success: false, error: 'Database query failed: ' + (queryError as Error).message },
         { status: 500 }
@@ -177,7 +156,7 @@ export async function GET(request: NextRequest) {
       // Combine all items into a single formatted string with proper spacing
       const itemsText = bill.items.map((item: any) => 
         `${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
-      ).join('\n\n'); // Add double line breaks between items for better spacing
+      ).join('\n\n');
       
       // Calculate subtotal (sum of all items)
       const subtotal = bill.items.reduce((sum: number, item: any) => sum + item.item_total, 0);
@@ -237,7 +216,7 @@ export async function GET(request: NextRequest) {
       { wch: 12 },  // Bill Type
       { wch: 20 },  // Farmer Name
       { wch: 15 },  // Mobile Number
-      { wch: 45 },  // Items Purchased (wider for multi-line content with spacing)
+      { wch: 45 },  // Items Purchased
       { wch: 12 },  // Subtotal
       { wch: 15 },  // Labour Charge
       { wch: 16 },  // Weighing Charge

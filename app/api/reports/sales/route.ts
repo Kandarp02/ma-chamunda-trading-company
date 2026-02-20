@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
-import { getDatabase } from '@/lib/database';
+import { query } from '@/lib/database';
 
 // Helper to format date for display
 function formatDate(dateStr: string): string {
@@ -41,24 +41,12 @@ export async function GET(request: NextRequest) {
 
     console.log('Sales report request:', { year, month, date });
 
-    let db;
-    try {
-      db = getDatabase();
-      console.log('Database connection successful');
-    } catch (dbError) {
-      console.error('Database connection error:', dbError);
-      return NextResponse.json(
-        { success: false, error: 'Database connection failed' },
-        { status: 500 }
-      );
-    }
-    
-    // Build query based on filters
-    let query = `
+    // Build query based on filters - using PostgreSQL syntax
+    let sqlQuery = `
       SELECT 
         sb.id as bill_id,
         sb.bill_date,
-        sb.shop_name,
+        sb.customer_name,
         sb.mobile_number,
         sb.total_amount,
         sb.amount_paid,
@@ -71,30 +59,48 @@ export async function GET(request: NextRequest) {
         sbi.quantity,
         sbi.rate,
         sbi.total as item_total
-      FROM SaleBills sb
-      LEFT JOIN SaleBillItems sbi ON sb.id = sbi.bill_id
+      FROM sale_bills sb
+      LEFT JOIN sale_bill_items sbi ON sb.id = sbi.bill_id
       WHERE 1=1
     `;
     
     const params: any[] = [];
+    let paramIndex = 1;
     
     if (date) {
       // Specific date filter
-      query += ` AND sb.bill_date = ?`;
+      sqlQuery += ` AND sb.bill_date = $${paramIndex++}`;
       params.push(date);
     } else if (year && month) {
-      // Year + month filter
-      query += ` AND strftime('%Y', sb.bill_date) = ? AND strftime('%m', sb.bill_date) = ?`;
-      params.push(year, month.padStart(2, '0'));
+      // Year + month filter - PostgreSQL uses EXTRACT
+      sqlQuery += ` AND EXTRACT(YEAR FROM sb.bill_date) = $${paramIndex++} AND EXTRACT(MONTH FROM sb.bill_date) = $${paramIndex++}`;
+      params.push(year, month);
     } else if (year) {
       // Year only filter
-      query += ` AND strftime('%Y', sb.bill_date) = ?`;
+      sqlQuery += ` AND EXTRACT(YEAR FROM sb.bill_date) = $${paramIndex++}`;
       params.push(year);
     }
     
-    query += ` ORDER BY sb.bill_date ASC, sb.id ASC`;
+    sqlQuery += ` ORDER BY sb.bill_date ASC, sb.id ASC`;
     
-    const rows = db.prepare(query).all(...params);
+    console.log('Executing query:', sqlQuery);
+    console.log('Query params:', params);
+    
+    let rows;
+    try {
+      const startTime = Date.now();
+      const result = await query(sqlQuery, params);
+      rows = result.rows;
+      const endTime = Date.now();
+      console.log('Query executed successfully, rows found:', rows.length);
+      console.log('Query execution time:', endTime - startTime, 'ms');
+    } catch (queryError) {
+      console.error('Query execution error:', queryError);
+      return NextResponse.json(
+        { success: false, error: 'Database query failed: ' + (queryError as Error).message },
+        { status: 500 }
+      );
+    }
     
     if (rows.length === 0) {
       return NextResponse.json(
@@ -106,12 +112,15 @@ export async function GET(request: NextRequest) {
     // Group data by bill_id (one row per bill)
     const billsMap = new Map();
     
+    console.log('First row sample:', rows[0]);
+    
     rows.forEach((row: any) => {
       if (!billsMap.has(row.bill_id)) {
+        console.log(`Bill ${row.bill_id} mobile_number from DB:`, row.mobile_number, '| type:', typeof row.mobile_number);
         billsMap.set(row.bill_id, {
           bill_id: row.bill_id,
           bill_date: row.bill_date,
-          shop_name: row.shop_name,
+          customer_name: row.customer_name,
           mobile_number: row.mobile_number,
           total_amount: row.total_amount,
           amount_paid: row.amount_paid,
@@ -147,7 +156,7 @@ export async function GET(request: NextRequest) {
       // Combine all items into a single formatted string with proper spacing
       const itemsText = bill.items.map((item: any) => 
         `${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
-      ).join('\n\n'); // Add double line breaks between items for better spacing
+      ).join('\n\n');
       
       // Calculate subtotal (sum of all items)
       const subtotal = bill.items.reduce((sum: number, item: any) => sum + item.item_total, 0);
@@ -156,14 +165,14 @@ export async function GET(request: NextRequest) {
         'Date': formatDate(bill.bill_date),
         'Bill Number': `S${bill.bill_id}`,
         'Bill Type': 'Sale',
-        'Shop Name': bill.shop_name,
+        'Customer Name': bill.customer_name,
         'Mobile Number': bill.mobile_number && bill.mobile_number.trim() ? bill.mobile_number : '-',
         'Items Sold': itemsText,
         'Subtotal (₹)': subtotal,
         'Labour Charge (₹)': bill.labour_charges || 0,
         'Weighing Charge (₹)': bill.weighing_charges || 0,
         'Total Bill Amount (₹)': bill.total_amount,
-        'Amount Received (₹)': bill.amount_paid,
+        'Amount Paid (₹)': bill.amount_paid,
         'Remaining (₹)': bill.amount_remaining,
         'Repayment Date': bill.repayment_date ? formatDate(bill.repayment_date) : '-',
         'Bill Created At': formatDate(bill.created_at),
@@ -205,22 +214,23 @@ export async function GET(request: NextRequest) {
       { wch: 12 },  // Date
       { wch: 12 },  // Bill Number
       { wch: 12 },  // Bill Type
-      { wch: 20 },  // Shop Name
+      { wch: 20 },  // Customer Name
       { wch: 15 },  // Mobile Number
-      { wch: 45 },  // Items Sold (wider for multi-line content with spacing)
+      { wch: 45 },  // Items Sold
       { wch: 12 },  // Subtotal
       { wch: 15 },  // Labour Charge
       { wch: 16 },  // Weighing Charge
       { wch: 18 },  // Total Bill Amount
-      { wch: 16 },  // Amount Received
+      { wch: 14 },  // Amount Paid
       { wch: 12 },  // Remaining
       { wch: 14 },  // Repayment Date
       { wch: 16 },  // Bill Created At
     ];
     
+    // Add worksheet to workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
     
-    // Generate filename based on filters
+    // Generate filename
     let filename = 'sales-report';
     if (year) filename += `-${year}`;
     if (month) filename += `-${month.padStart(2, '0')}`;

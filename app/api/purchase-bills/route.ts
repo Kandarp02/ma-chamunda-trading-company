@@ -4,7 +4,7 @@ import { purchaseBillQueries } from '@/lib/database';
 // GET all purchase bills
 export async function GET() {
   try {
-    const bills = purchaseBillQueries.getAll();
+    const bills = await purchaseBillQueries.getAll();
     return NextResponse.json({ success: true, data: bills });
   } catch (error) {
     console.error('Error fetching purchase bills:', error);
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const grandTotal = itemsTotal - labourCharges - weighingCharges;
     const amountRemaining = grandTotal - amount_paid;
 
-    const result = purchaseBillQueries.create({
+    const result = await purchaseBillQueries.create({
       farmer_name: farmer_name.trim(),
       mobile_number: mobile_number || '',
       total_amount: grandTotal,
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        id: result.lastInsertRowid,
+        id: result.id,
         farmer_name: farmer_name.trim(),
         items: processedItems,
         total_amount: itemsTotal,

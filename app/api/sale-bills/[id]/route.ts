@@ -17,7 +17,7 @@ export async function DELETE(
     }
 
     // Get the bill to be deleted for stock rollback
-    const bill = saleBillQueries.getById(billId)
+    const bill = await saleBillQueries.getById(billId)
     if (!bill) {
       return NextResponse.json(
         { error: 'Bill not found' },
@@ -26,14 +26,7 @@ export async function DELETE(
     }
 
     // Delete the bill (this will also rollback stock)
-    const result = saleBillQueries.delete(billId)
-    
-    if (result.changes === 0) {
-      return NextResponse.json(
-        { error: 'Failed to delete bill' },
-        { status: 500 }
-      )
-    }
+    await saleBillQueries.delete(billId)
 
     return NextResponse.json({ success: true })
   } catch (error) {

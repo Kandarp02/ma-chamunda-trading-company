@@ -4,7 +4,7 @@ import { adminQueries } from '@/lib/admin-auth';
 // GET /api/admin/users - Get all admin users
 export async function GET() {
   try {
-    const users = adminQueries.getAll();
+    const users = await adminQueries.getAll();
     return NextResponse.json({
       success: true,
       users
@@ -32,14 +32,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user
-    const result = adminQueries.create(username, password, role || 'admin');
+    const result = await adminQueries.create(username, password, role || 'admin');
 
     return NextResponse.json({
       success: true,
       user: {
-        id: result.lastInsertRowid,
-        username,
-        role
+        id: result.id,
+        username: result.username,
+        role: result.role
       }
     });
 

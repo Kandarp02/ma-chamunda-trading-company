@@ -16,7 +16,7 @@ export async function GET(
       );
     }
 
-    const stock = stockQueries.getById(id);
+    const stock = await stockQueries.getById(id);
     if (!stock) {
       return NextResponse.json(
         { success: false, error: 'Stock not found' },
@@ -68,7 +68,7 @@ export async function PUT(
     }
 
     // Check if stock exists
-    const existingStock = stockQueries.getById(id);
+    const existingStock = await stockQueries.getById(id);
     if (!existingStock) {
       return NextResponse.json(
         { success: false, error: 'Stock not found' },
@@ -76,10 +76,7 @@ export async function PUT(
       );
     }
 
-    const result = stockQueries.update(id, {
-      crop_name: crop_name.trim(),
-      quantity: Number(quantity)
-    });
+    const result = await stockQueries.update(id, Number(quantity));
 
     return NextResponse.json({
       success: true,
@@ -114,7 +111,7 @@ export async function DELETE(
     }
 
     // Check if stock exists
-    const existingStock = stockQueries.getById(id);
+    const existingStock = await stockQueries.getById(id);
     if (!existingStock) {
       return NextResponse.json(
         { success: false, error: 'Stock not found' },
@@ -122,7 +119,7 @@ export async function DELETE(
       );
     }
 
-    const result = stockQueries.delete(id);
+    await stockQueries.delete(id);
 
     return NextResponse.json({
       success: true,

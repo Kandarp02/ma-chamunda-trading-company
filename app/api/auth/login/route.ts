@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Authenticate user
-    const user = adminQueries.authenticate(username, password);
+    const user = await adminQueries.authenticate(username, password);
 
     if (!user) {
       return NextResponse.json(

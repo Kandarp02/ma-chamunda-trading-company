@@ -4,7 +4,7 @@ import { stockQueries } from '@/lib/database';
 // GET all crop stocks
 export async function GET() {
   try {
-    const stocks = stockQueries.getAll();
+    const stocks = await stockQueries.getAll();
     return NextResponse.json({ success: true, data: stocks });
   } catch (error) {
     console.error('Error fetching stocks:', error);
@@ -37,12 +37,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if stock exists to get the ID for updates
-    const existingStock = stockQueries.getByName(crop_name.trim()) as { id: number; quantity: number } | undefined;
+    const existingStock = await stockQueries.getByName(crop_name.trim()) as { id: number; quantity: number } | undefined;
     
-    const result = stockQueries.upsertStock(crop_name.trim(), Number(quantity));
+    const result = await stockQueries.updateQuantity(crop_name.trim(), Number(quantity));
 
     // Return the correct ID (existing for update, new for insert)
-    const stockId = existingStock ? existingStock.id : result.lastInsertRowid;
+    const stockId = existingStock ? existingStock.id : result.id;
     const newQuantity = existingStock ? existingStock.quantity + Number(quantity) : Number(quantity);
 
     return NextResponse.json({
