@@ -26,11 +26,17 @@ let pool: Pool | null = null;
 
 function getPool(): Pool {
   if (!pool) {
+    const config = getConnectionConfig();
+    console.log('Database config:', { 
+      hasConnectionString: !!config.connectionString,
+      host: config.host || 'from connection string'
+    });
+    
     pool = new Pool({
-      ...getConnectionConfig(),
-      max: 10, // Maximum connections in pool
+      ...config,
+      max: 10,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      connectionTimeoutMillis: 5000,
     });
     
     pool.on('error', (err) => {
@@ -188,4 +194,4 @@ export async function closeDatabase(): Promise<void> {
 }
 
 // Re-export types
-export { Pool, PoolClient, QueryResult };
+export type { Pool, PoolClient, QueryResult };
