@@ -5,7 +5,10 @@ import { Pool, PoolClient, QueryResult } from 'pg';
 // Falls back to local config for development
 const getConnectionConfig = () => {
   if (process.env.DATABASE_URL) {
-    return { connectionString: process.env.DATABASE_URL };
+    return { 
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false } // Required for Supabase/Vercel
+    };
   }
   
   // Local development fallback
