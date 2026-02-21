@@ -34,8 +34,12 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        // Store auth in secure cookie
-        document.cookie = `adminAuth=${JSON.stringify(data.user)}; path=/; max-age=86400; secure; samesite=strict`;
+        // Store auth in session-only cookie with timestamp
+        const authData = {
+          ...data.user,
+          sessionStart: Date.now() // Add session start time
+        };
+        document.cookie = `adminAuth=${JSON.stringify(authData)}; path=/; secure; samesite=strict`;
         
         router.push('/admin');
       } else {

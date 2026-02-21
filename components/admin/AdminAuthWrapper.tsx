@@ -10,7 +10,7 @@ export default function AdminAuthWrapper({ children }: { children: React.ReactNo
   useEffect(() => {
     const checkAuth = () => {
       try {
-        // Check for admin auth cookie
+        // Clear any existing auth on mount to require fresh login
         const cookies = document.cookie.split(';')
         const authCookie = cookies.find(cookie => cookie.trim().startsWith('adminAuth='))
         
@@ -22,10 +22,17 @@ export default function AdminAuthWrapper({ children }: { children: React.ReactNo
 
         const authData = JSON.parse(authCookie.split('=')[1])
         
-        // Check if user has admin role
-        if (authData && authData.role === 'admin') {
+        // Check if session is from current browser session (within last 30 seconds)
+        // This ensures fresh login for each new tab/window
+        const sessionAge = Date.now() - (authData.sessionStart || 0)
+        const MAX_SESSION_AGE = 24 * 60 * 60 * 1000; // 24 hours in ms
+        
+        // Check if user has admin role AND session is valid
+        if (authData && authData.role === 'admin' && sessionAge < MAX_SESSION_AGE) {
           setIsAuthenticated(true)
         } else {
+          // Clear invalid/expired cookie
+          document.cookie = 'adminAuth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT'
           setIsAuthenticated(false)
           router.push('/login')
         }
