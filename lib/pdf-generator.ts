@@ -224,6 +224,7 @@ export class PDFGenerator {
     
     let currentY = startY;
     let itemsProcessed = 0;
+    let isFirstPage = true;
     
     // Process items in batches to fit on pages
     while (itemsProcessed < items.length) {
@@ -232,52 +233,25 @@ export class PDFGenerator {
       const remainingItems = items.length - itemsProcessed;
       const itemsToProcess = Math.min(maxRows - 1, remainingItems); // -1 for header
       
-      // Add header if starting new page or first page
+      // Add table header on each new page
       if (itemsProcessed === 0 || currentY < 50) {
-        if (itemsProcessed === 0) {
-          // First page - add page border and regular header
-          this.addPageBorder();
-          await this.addHeader();
-          currentY = 68;
-        } else {
-          // New page - add page border and continued header
+        if (!isFirstPage) {
+          // New page (not first) - add page border and continued header
           this.addPageBorder();
           await this.addHeaderForNewPage();
           currentY = 68;
-        }
-        
-        // Add customer name and bill date before items table
-        this.doc.setFontSize(14);
-        this.doc.setFont('helvetica', 'bold');
-        
-        // Customer Name
-        const customerName = billType === 'PURCHASE' 
-          ? (bill as PurchaseBillData).farmer_name 
-          : (bill as SaleBillData).shop_name;
-        const cleanCustomerName = this.encodeText(customerName);
-        const label = billType === 'PURCHASE' ? 'Customer Name:' : 'Shop Name:';
-        this.doc.text(`${label} ${cleanCustomerName}`, 15, currentY);
-        currentY += 15;
-        
-        // Mobile Number
-        if (bill.mobile_number) {
-          this.doc.setFontSize(12);
-          this.doc.setFont('helvetica', 'normal');
-          const cleanMobile = this.encodeText(`Mobile: ${bill.mobile_number}`);
-          this.doc.text(cleanMobile, 15, currentY);
+          
+          // Add continued notice
+          this.doc.setFontSize(10);
+          this.doc.setFont('helvetica', 'italic');
+          const continuedText = this.encodeText('(Continued from previous page)');
+          this.doc.text(continuedText, pageWidth / 2, currentY, { align: 'center' });
           currentY += 15;
         }
         
-        // Bill Date
-        this.doc.setFontSize(12);
-        this.doc.setFont('helvetica', 'normal');
-        const cleanBillDate = this.encodeText(bill.bill_date);
-        this.doc.text(`Bill Date: ${cleanBillDate}`, 15, currentY);
-        currentY += 15;
+        isFirstPage = false;
         
-        // Add some space before the table
-        currentY += 10;
-        
+        // Add table header row
         this.doc.setFillColor(240, 240, 240);
         this.doc.rect(15, currentY, tableWidth, rowHeight, 'FD');
         
@@ -501,10 +475,38 @@ export class PDFGenerator {
       format: 'a4'
     });
 
-    // Add all sections - page border and header added in addItemsTable for proper pagination
-    const headerY = 20;
-    const billInfoY = this.addBillInfo(bill, 'PURCHASE', headerY);
-    const tableY = await this.addItemsTable(bill.items, billInfoY, bill, 'PURCHASE');
+    // First page: Add border and full header
+    this.addPageBorder();
+    await this.addHeader();
+    
+    // Add customer info on first page
+    let currentY = 68; // After header
+    
+    // Customer Name
+    this.doc.setFontSize(14);
+    this.doc.setFont('helvetica', 'bold');
+    const cleanCustomerName = this.encodeText(bill.farmer_name);
+    this.doc.text(`Customer Name: ${cleanCustomerName}`, 15, currentY);
+    currentY += 15;
+    
+    // Mobile Number
+    if (bill.mobile_number) {
+      this.doc.setFontSize(12);
+      this.doc.setFont('helvetica', 'normal');
+      const cleanMobile = this.encodeText(`Mobile: ${bill.mobile_number}`);
+      this.doc.text(cleanMobile, 15, currentY);
+      currentY += 15;
+    }
+    
+    // Bill Date
+    this.doc.setFontSize(12);
+    this.doc.setFont('helvetica', 'normal');
+    const cleanBillDate = this.encodeText(bill.bill_date);
+    this.doc.text(`Bill Date: ${cleanBillDate}`, 15, currentY);
+    currentY += 20;
+    
+    // Add items table starting from currentY
+    const tableY = await this.addItemsTable(bill.items, currentY, bill, 'PURCHASE');
     const summaryY = this.addSummaryTable(bill, tableY);
     await this.addSignatureAndFooter(summaryY);
 
@@ -524,10 +526,38 @@ export class PDFGenerator {
       format: 'a4'
     });
 
-    // Add all sections - page border and header added in addItemsTable for proper pagination
-    const headerY = 20;
-    const billInfoY = this.addBillInfo(bill, 'SALE', headerY);
-    const tableY = await this.addItemsTable(bill.items, billInfoY, bill, 'SALE');
+    // First page: Add border and full header
+    this.addPageBorder();
+    await this.addHeader();
+    
+    // Add customer info on first page
+    let currentY = 68; // After header
+    
+    // Shop Name
+    this.doc.setFontSize(14);
+    this.doc.setFont('helvetica', 'bold');
+    const cleanShopName = this.encodeText(bill.shop_name);
+    this.doc.text(`Shop Name: ${cleanShopName}`, 15, currentY);
+    currentY += 15;
+    
+    // Mobile Number
+    if (bill.mobile_number) {
+      this.doc.setFontSize(12);
+      this.doc.setFont('helvetica', 'normal');
+      const cleanMobile = this.encodeText(`Mobile: ${bill.mobile_number}`);
+      this.doc.text(cleanMobile, 15, currentY);
+      currentY += 15;
+    }
+    
+    // Bill Date
+    this.doc.setFontSize(12);
+    this.doc.setFont('helvetica', 'normal');
+    const cleanBillDate = this.encodeText(bill.bill_date);
+    this.doc.text(`Bill Date: ${cleanBillDate}`, 15, currentY);
+    currentY += 20;
+    
+    // Add items table starting from currentY
+    const tableY = await this.addItemsTable(bill.items, currentY, bill, 'SALE');
     const summaryY = this.addSummaryTable(bill, tableY);
     await this.addSignatureAndFooter(summaryY);
 
