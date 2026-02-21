@@ -505,7 +505,8 @@ export class PDFGenerator {
     // Bill Date
     this.doc.setFontSize(12);
     this.doc.setFont('helvetica', 'normal');
-    const cleanBillDate = this.encodeText(bill.bill_date);
+    const formattedBillDate = this.formatDate(bill.bill_date);
+    const cleanBillDate = this.encodeText(formattedBillDate);
     this.doc.text(`Bill Date: ${cleanBillDate}`, 15, currentY);
     currentY += 20;
     
@@ -556,7 +557,8 @@ export class PDFGenerator {
     // Bill Date
     this.doc.setFontSize(12);
     this.doc.setFont('helvetica', 'normal');
-    const cleanBillDate = this.encodeText(bill.bill_date);
+    const formattedBillDate = this.formatDate(bill.bill_date);
+    const cleanBillDate = this.encodeText(formattedBillDate);
     this.doc.text(`Bill Date: ${cleanBillDate}`, 15, currentY);
     currentY += 20;
     

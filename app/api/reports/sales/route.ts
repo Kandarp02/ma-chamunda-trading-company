@@ -153,10 +153,10 @@ export async function GET(request: NextRequest) {
         groupedData[monthKey] = [];
       }
       
-      // Combine all items into a single formatted string with proper spacing
-      const itemsText = bill.items.map((item: any) => 
-        `${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
-      ).join('\n\n');
+      // Combine all items into a single formatted string with proper spacing and visual separation
+      const itemsText = bill.items.map((item: any, index: number) => 
+        `${index + 1}. ${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
+      ).join('\n_____________________________________\n');
       
       // Calculate subtotal (sum of all items) - ensure all values are numbers
       const subtotal = bill.items.reduce((sum: number, item: any) => sum + (Number(item.item_total) || 0), 0);
@@ -212,8 +212,11 @@ export async function GET(request: NextRequest) {
     // Calculate row heights based on content (for items with multiple lines)
     const rowHeights = wsData.map((row: any) => {
       const itemsText = row['Items Purchased'] || row['Items Sold'] || '';
+      // Count actual lines including separator lines
       const lineCount = itemsText.split('\n').length;
-      return { hpt: Math.max(15, lineCount * 15) }; // Minimum 15pt, 15pt per line
+      // Each item takes about 2 lines (content + separator), minimum 20pt per item
+      const itemCount = row['Items Purchased'] || row['Items Sold'] ? Math.max(1, (itemsText.match(/\d+\./g) || []).length) : 0;
+      return { hpt: Math.max(20, itemCount * 25 + (lineCount - itemCount * 2) * 10) }; // 25pt per item + extra for separators
     });
     ws['!rows'] = rowHeights;
     
