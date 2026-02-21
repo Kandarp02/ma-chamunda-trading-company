@@ -158,8 +158,8 @@ export async function GET(request: NextRequest) {
         `${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
       ).join('\n\n');
       
-      // Calculate subtotal (sum of all items)
-      const subtotal = bill.items.reduce((sum: number, item: any) => sum + item.item_total, 0);
+      // Calculate subtotal (sum of all items) - ensure all values are numbers
+      const subtotal = bill.items.reduce((sum: number, item: any) => sum + (Number(item.item_total) || 0), 0);
       
       groupedData[monthKey].push({
         'Date': formatDate(bill.bill_date),
@@ -209,20 +209,28 @@ export async function GET(request: NextRequest) {
     
     const ws = XLSX.utils.json_to_sheet(wsData);
     
-    // Set column widths
+    // Calculate row heights based on content (for items with multiple lines)
+    const rowHeights = wsData.map((row: any) => {
+      const itemsText = row['Items Purchased'] || row['Items Sold'] || '';
+      const lineCount = itemsText.split('\n').length;
+      return { hpt: Math.max(15, lineCount * 15) }; // Minimum 15pt, 15pt per line
+    });
+    ws['!rows'] = rowHeights;
+    
+    // Set column widths - wider for better readability
     ws['!cols'] = [
       { wch: 12 },  // Date
       { wch: 12 },  // Bill Number
       { wch: 12 },  // Bill Type
-      { wch: 20 },  // Customer Name
+      { wch: 25 },  // Customer Name (wider)
       { wch: 15 },  // Mobile Number
-      { wch: 45 },  // Items Sold
-      { wch: 12 },  // Subtotal
+      { wch: 50 },  // Items Sold (wider for multiple items)
+      { wch: 15 },  // Subtotal (wider for proper display)
       { wch: 15 },  // Labour Charge
       { wch: 16 },  // Weighing Charge
       { wch: 18 },  // Total Bill Amount
-      { wch: 14 },  // Amount Paid
-      { wch: 12 },  // Remaining
+      { wch: 15 },  // Amount Paid
+      { wch: 15 },  // Remaining (wider)
       { wch: 14 },  // Repayment Date
       { wch: 16 },  // Bill Created At
     ];

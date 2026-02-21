@@ -283,6 +283,21 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
       errors.amount_paid = `Amount paid cannot exceed total amount (₹${grandTotal})`
     }
 
+    // Validate repayment date when amount is remaining
+    const remaining = grandTotal - amountPaid
+    if (remaining > 0) {
+      if (!purchaseForm.repayment_date || !purchaseForm.repayment_date.trim()) {
+        errors.repayment_date = 'Repayment date is mandatory when remaining amount is greater than 0'
+      } else {
+        const repaymentDate = new Date(purchaseForm.repayment_date)
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        if (repaymentDate < today) {
+          errors.repayment_date = 'Repayment date cannot be in the past'
+        }
+      }
+    }
+
     setPurchaseFormErrors(errors)
     return !Object.values(errors).some(error => error !== '')
   }
