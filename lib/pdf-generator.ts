@@ -208,6 +208,12 @@ export class PDFGenerator {
   }
 
   private async addItemsTable(items: BillItem[], startY: number, bill: PurchaseBillData | SaleBillData, billType: 'PURCHASE' | 'SALE'): Promise<number> {
+    // Safety check for undefined items
+    if (!items || !Array.isArray(items)) {
+      console.error('Items is undefined or not an array:', items);
+      items = [];
+    }
+    
     const pageWidth = this.doc.internal.pageSize.getWidth();
     const pageHeight = this.doc.internal.pageSize.getHeight();
     const margin = 15;
@@ -475,6 +481,12 @@ export class PDFGenerator {
   }
 
   async generatePurchaseBill(bill: PurchaseBillData): Promise<string> {
+    // Safety check for bill items
+    if (!bill.items || !Array.isArray(bill.items)) {
+      console.error('Bill items is undefined, setting to empty array');
+      bill.items = [];
+    }
+    
     this.doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -495,6 +507,12 @@ export class PDFGenerator {
   }
 
   async generateSaleBill(bill: SaleBillData): Promise<string> {
+    // Safety check for bill items
+    if (!bill.items || !Array.isArray(bill.items)) {
+      console.error('Bill items is undefined, setting to empty array');
+      bill.items = [];
+    }
+    
     this.doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
