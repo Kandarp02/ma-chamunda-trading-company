@@ -121,8 +121,19 @@ export const stockQueries = {
 // Purchase bill queries
 export const purchaseBillQueries = {
   getAll: async () => {
-    const result = await query('SELECT * FROM purchase_bills ORDER BY created_at DESC');
-    return result.rows;
+    // Fetch all bills
+    const billsResult = await query('SELECT * FROM purchase_bills ORDER BY created_at DESC');
+    const bills = billsResult.rows;
+    
+    // Fetch items for all bills
+    const itemsResult = await query('SELECT * FROM purchase_bill_items');
+    const allItems = itemsResult.rows;
+    
+    // Attach items to each bill
+    return bills.map(bill => ({
+      ...bill,
+      items: allItems.filter(item => item.bill_id === bill.id)
+    }));
   },
   
   getById: async (id: number) => {
@@ -231,8 +242,19 @@ export const purchaseBillQueries = {
 // Sale bill queries
 export const saleBillQueries = {
   getAll: async () => {
-    const result = await query('SELECT * FROM sale_bills ORDER BY created_at DESC');
-    return result.rows;
+    // Fetch all bills
+    const billsResult = await query('SELECT * FROM sale_bills ORDER BY created_at DESC');
+    const bills = billsResult.rows;
+    
+    // Fetch items for all bills
+    const itemsResult = await query('SELECT * FROM sale_bill_items');
+    const allItems = itemsResult.rows;
+    
+    // Attach items to each bill
+    return bills.map(bill => ({
+      ...bill,
+      items: allItems.filter(item => item.bill_id === bill.id)
+    }));
   },
   
   getById: async (id: number) => {
