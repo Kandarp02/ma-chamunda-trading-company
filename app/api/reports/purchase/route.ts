@@ -209,14 +209,19 @@ export async function GET(request: NextRequest) {
     
     const ws = XLSX.utils.json_to_sheet(wsData);
     
-    // Calculate row heights based on content (for items with multiple lines)
+    // Calculate row heights based on content - ensure all items are visible by default
     const rowHeights = wsData.map((row: any) => {
       const itemsText = row['Items Purchased'] || row['Items Sold'] || '';
-      // Count actual lines including separator lines
-      const lineCount = itemsText.split('\n').length;
-      // Each item takes about 2 lines (content + separator), minimum 20pt per item
-      const itemCount = row['Items Purchased'] || row['Items Sold'] ? Math.max(1, (itemsText.match(/\d+\./g) || []).length) : 0;
-      return { hpt: Math.max(20, itemCount * 25 + (lineCount - itemCount * 2) * 10) }; // 25pt per item + extra for separators
+      if (!itemsText) return { hpt: 25 }; // Default height for empty rows
+      
+      // Count number of items by counting the numbered entries (1., 2., etc.)
+      const itemCount = (itemsText.match(/\d+\./g) || []).length;
+      // Each item needs about 30pt height to be fully visible with separator lines
+      // Add extra padding for the separator lines between items
+      const separatorCount = Math.max(0, itemCount - 1);
+      const totalHeight = (itemCount * 30) + (separatorCount * 5) + 15; // 30pt per item + 5pt per separator + 15pt padding
+      
+      return { hpt: Math.max(30, totalHeight) };
     });
     ws['!rows'] = rowHeights;
     
