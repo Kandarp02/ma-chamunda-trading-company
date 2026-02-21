@@ -501,11 +501,8 @@ export class PDFGenerator {
       format: 'a4'
     });
 
-    // Add page border to first page
-    this.addPageBorder();
-
-    // Add all sections with pagination support
-    const headerY = 68; // Header is added inside addItemsTable
+    // Add all sections - page border and header added in addItemsTable for proper pagination
+    const headerY = 20;
     const billInfoY = this.addBillInfo(bill, 'PURCHASE', headerY);
     const tableY = await this.addItemsTable(bill.items, billInfoY, bill, 'PURCHASE');
     const summaryY = this.addSummaryTable(bill, tableY);
@@ -527,11 +524,8 @@ export class PDFGenerator {
       format: 'a4'
     });
 
-    // Add page border to first page
-    this.addPageBorder();
-
-    // Add all sections with pagination support
-    const headerY = 68; // Header is added inside addItemsTable
+    // Add all sections - page border and header added in addItemsTable for proper pagination
+    const headerY = 20;
     const billInfoY = this.addBillInfo(bill, 'SALE', headerY);
     const tableY = await this.addItemsTable(bill.items, billInfoY, bill, 'SALE');
     const summaryY = this.addSummaryTable(bill, tableY);
