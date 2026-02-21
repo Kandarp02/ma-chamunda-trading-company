@@ -304,11 +304,13 @@ export class PDFGenerator {
         this.doc.setFillColor(255, 255, 255);
         this.doc.rect(15, currentY, tableWidth, rowHeight, 'FD');
         
-        // Clean and format text properly - use Rs. instead of rupee symbol
+        // Clean and format text properly - convert to numbers first to handle string values from DB
         const cleanCropName = this.encodeText(item.crop_name);
-        const cleanQuantity = this.encodeText(item.quantity.toString());
-        const cleanRate = this.encodeText(`Rs.${item.rate.toFixed(2)}`);
-        const cleanTotal = this.encodeText(`Rs.${item.total.toFixed(2)}`);
+        const cleanQuantity = this.encodeText(String(item.quantity));
+        const rate = Number(item.rate) || 0;
+        const total = Number(item.total) || 0;
+        const cleanRate = this.encodeText(`Rs.${rate.toFixed(2)}`);
+        const cleanTotal = this.encodeText(`Rs.${total.toFixed(2)}`);
         
         this.drawTableRow(
           15, 
@@ -343,10 +345,16 @@ export class PDFGenerator {
     const borderMargin = 10;
     const footerHeight = 20; // Space needed for footer inside border
     
+    // Convert values to numbers (they may come as strings from database)
+    const labourCharges = Number(bill.labour_charges) || 0;
+    const weighingCharges = Number(bill.weighing_charges) || 0;
+    const amountPaid = Number(bill.amount_paid) || 0;
+    const amountRemaining = Number(bill.amount_remaining) || 0;
+    
     // Calculate items total
-    const itemsTotal = bill.items.reduce((sum, item) => sum + item.total, 0);
+    const itemsTotal = bill.items.reduce((sum, item) => sum + (Number(item.total) || 0), 0);
     // Subtract charges from items total to get grand total
-    const totalAmount = itemsTotal - bill.labour_charges - bill.weighing_charges;
+    const totalAmount = itemsTotal - labourCharges - weighingCharges;
     
     const repaymentDate = bill.repayment_date 
       ? this.formatDate(bill.repayment_date) 
@@ -366,11 +374,11 @@ export class PDFGenerator {
     }
     
     const summaryRows = [
-      { label: 'Labour Charges (Rs.)', value: `Rs.${bill.labour_charges.toFixed(2)}` },
-      { label: 'Weighing Charges (Rs.)', value: `Rs.${bill.weighing_charges.toFixed(2)}` },
+      { label: 'Labour Charges (Rs.)', value: `Rs.${labourCharges.toFixed(2)}` },
+      { label: 'Weighing Charges (Rs.)', value: `Rs.${weighingCharges.toFixed(2)}` },
       { label: 'Total Amount (Rs.)', value: `Rs.${totalAmount.toFixed(2)}` },
-      { label: 'Amount Paid (Rs.)', value: `Rs.${bill.amount_paid.toFixed(2)}` },
-      { label: 'Amount Remaining (Rs.)', value: `Rs.${bill.amount_remaining.toFixed(2)}` },
+      { label: 'Amount Paid (Rs.)', value: `Rs.${amountPaid.toFixed(2)}` },
+      { label: 'Amount Remaining (Rs.)', value: `Rs.${amountRemaining.toFixed(2)}` },
       { label: 'Repayment Due Date:', value: repaymentDate }
     ];
     
