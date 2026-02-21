@@ -250,9 +250,10 @@ export const saleBillQueries = {
     const itemsResult = await query('SELECT * FROM sale_bill_items');
     const allItems = itemsResult.rows;
     
-    // Attach items to each bill
+    // Attach items to each bill and map customer_name to shop_name
     return bills.map(bill => ({
       ...bill,
+      shop_name: bill.customer_name || bill.shop_name, // Map database field to frontend field
       items: allItems.filter(item => item.bill_id === bill.id)
     }));
   },
@@ -264,6 +265,7 @@ export const saleBillQueries = {
     const itemsResult = await query('SELECT * FROM sale_bill_items WHERE bill_id = $1', [id]);
     return {
       ...billResult.rows[0],
+      shop_name: billResult.rows[0].customer_name || billResult.rows[0].shop_name, // Map database field to frontend field
       items: itemsResult.rows
     };
   },

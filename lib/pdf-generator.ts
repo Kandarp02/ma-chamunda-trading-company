@@ -55,6 +55,10 @@ export class PDFGenerator {
   }
 
   private encodeText(text: string): string {
+    // Handle undefined/null values safely
+    if (text === undefined || text === null) {
+      return '';
+    }
     // Replace rupee symbol with Rs. before encoding
     return text.toString()
       .replace(/₹/g, 'Rs.') // Replace rupee symbol with Rs.
