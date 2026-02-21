@@ -92,6 +92,19 @@ export const stockQueries = {
   },
   
   updateQuantity: async (cropName: string, quantityChange: number) => {
+    // First check if crop exists
+    const existing = await query('SELECT * FROM crop_stock WHERE crop_name = $1', [cropName]);
+    
+    if (existing.rows.length === 0) {
+      // Insert new crop
+      const result = await query(
+        'INSERT INTO crop_stock (crop_name, quantity) VALUES ($1, $2) RETURNING *',
+        [cropName, quantityChange]
+      );
+      return result.rows[0];
+    }
+    
+    // Update existing crop
     const result = await query(
       'UPDATE crop_stock SET quantity = quantity + $1, last_updated = CURRENT_TIMESTAMP WHERE crop_name = $2 RETURNING *',
       [quantityChange, cropName]
