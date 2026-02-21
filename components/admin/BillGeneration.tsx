@@ -52,16 +52,16 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
   // Filter purchase bills by farmer name or bill ID (case-insensitive)
   const filteredPurchaseBills = purchaseBills.filter(bill => {
     const searchLower = purchaseSearchQuery.toLowerCase()
-    const farmerNameMatch = bill.farmer_name.toLowerCase().includes(searchLower)
-    const billIdMatch = `p${bill.id}`.includes(searchLower) || bill.id.toString().includes(searchLower)
+    const farmerNameMatch = bill.farmer_name?.toLowerCase().includes(searchLower) || false
+    const billIdMatch = `p${bill.id}`.includes(searchLower) || bill.id?.toString().includes(searchLower) || false
     return farmerNameMatch || billIdMatch
   })
 
   // Filter sale bills by shop name or bill ID (case-insensitive)
   const filteredSaleBills = saleBills.filter(bill => {
     const searchLower = saleSearchQuery.toLowerCase()
-    const shopNameMatch = bill.shop_name.toLowerCase().includes(searchLower)
-    const billIdMatch = `s${bill.id}`.includes(searchLower) || bill.id.toString().includes(searchLower)
+    const shopNameMatch = bill.shop_name?.toLowerCase().includes(searchLower) || false
+    const billIdMatch = `s${bill.id}`.includes(searchLower) || bill.id?.toString().includes(searchLower) || false
     return shopNameMatch || billIdMatch
   })
 
