@@ -236,6 +236,19 @@ export const purchaseBillQueries = {
       await client.query('DELETE FROM purchase_bills WHERE id = $1', [id]);
       return true;
     });
+  },
+  
+  markAsPaid: async (id: number) => {
+    const result = await query(
+      `UPDATE purchase_bills 
+       SET amount_paid = total_amount, 
+           amount_remaining = 0, 
+           repayment_date = NULL 
+       WHERE id = $1 
+       RETURNING *`,
+      [id]
+    );
+    return result.rows[0];
   }
 };
 
@@ -365,6 +378,19 @@ export const saleBillQueries = {
       await client.query('DELETE FROM sale_bills WHERE id = $1', [id]);
       return true;
     });
+  },
+  
+  markAsPaid: async (id: number) => {
+    const result = await query(
+      `UPDATE sale_bills 
+       SET amount_paid = total_amount, 
+           amount_remaining = 0, 
+           repayment_date = NULL 
+       WHERE id = $1 
+       RETURNING *`,
+      [id]
+    );
+    return result.rows[0];
   }
 };
 

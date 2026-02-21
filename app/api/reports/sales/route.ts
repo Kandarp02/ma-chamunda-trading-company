@@ -197,34 +197,26 @@ export async function GET(request: NextRequest) {
       // Add bills for this month
       groupedData[monthKey].forEach((bill, index) => {
         wsData.push(bill);
-        
-        // Add 2 empty rows after each bill except the last one in the month
-        if (index < groupedData[monthKey].length - 1) {
-          wsData.push({});
-          wsData.push({});
-        }
       });
       
-      // Add extra spacing between months
-      wsData.push({});
+      // Add spacing between months
       wsData.push({});
     });
     
     const ws = XLSX.utils.json_to_sheet(wsData);
     
-    // Calculate row heights based on content - ensure all items are visible by default
+    // Calculate row heights based on content - compact but readable
     const rowHeights = wsData.map((row: any) => {
       const itemsText = row['Items Purchased'] || row['Items Sold'] || '';
-      if (!itemsText) return { hpt: 25 }; // Default height for empty rows
+      if (!itemsText) return { hpt: 18 }; // Compact default height for empty/header rows
       
       // Count number of items by counting the numbered entries (1., 2., etc.)
       const itemCount = (itemsText.match(/\d+\./g) || []).length;
-      // Each item needs about 30pt height to be fully visible with separator lines
-      // Add extra padding for the separator lines between items
+      // Compact height: 18pt per item + 3pt per separator + 10pt padding
       const separatorCount = Math.max(0, itemCount - 1);
-      const totalHeight = (itemCount * 30) + (separatorCount * 5) + 15; // 30pt per item + 5pt per separator + 15pt padding
+      const totalHeight = (itemCount * 18) + (separatorCount * 3) + 10;
       
-      return { hpt: Math.max(30, totalHeight) };
+      return { hpt: Math.max(20, totalHeight) };
     });
     ws['!rows'] = rowHeights;
     

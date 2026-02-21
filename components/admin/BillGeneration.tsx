@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Plus, Download, FileText, Trash2, X } from 'lucide-react'
+import { Plus, Download, FileText, Trash2, X, CheckCircle } from 'lucide-react'
 import { stockAPI, purchaseBillAPI, saleBillAPI } from '@/lib/api'
 import { pdfGenerator, PurchaseBillData, SaleBillData } from '@/lib/pdf-generator'
 import { validateIndianMobileNumber, formatMobileNumberForInput } from '@/lib/mobile-validation'
@@ -576,6 +576,61 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
     }
   }
 
+  // Mark as paid handlers
+  const handleMarkPurchaseBillAsPaid = async (billId: number) => {
+    if (!confirm('Mark this bill as fully paid? This will set remaining amount to 0.')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/purchase-bills/${billId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to mark bill as paid')
+      }
+      
+      const data = await response.json()
+      
+      // Update the bill in the list
+      setPurchaseBills(purchaseBills.map(bill => 
+        bill.id === billId ? { ...bill, ...data.bill } : bill
+      ))
+    } catch (error) {
+      console.error('Error marking purchase bill as paid:', error)
+      alert('Failed to mark bill as paid')
+    }
+  }
+
+  const handleMarkSaleBillAsPaid = async (billId: number) => {
+    if (!confirm('Mark this bill as fully paid? This will set remaining amount to 0.')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/sale-bills/${billId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to mark bill as paid')
+      }
+      
+      const data = await response.json()
+      
+      // Update the bill in the list
+      setSaleBills(saleBills.map(bill => 
+        bill.id === billId ? { ...bill, ...data.bill } : bill
+      ))
+    } catch (error) {
+      console.error('Error marking sale bill as paid:', error)
+      alert('Failed to mark bill as paid')
+    }
+  }
+
   // PDF generation handlers
   const generatePurchasePDF = async (bill: PurchaseBillData) => {
     try {
@@ -1078,27 +1133,49 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
                       })()}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => billType === 'purchase' 
-                            ? generatePurchasePDF(bill as PurchaseBillData) 
-                            : generateSalePDF(bill as SaleBillData)}
-                          className="bg-primary text-primary-foreground hover:bg-primary/90"
-                        >
-                          <Download className="w-4 h-4 mr-1" />
-                          PDF
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => billType === 'purchase' 
-                            ? handleDeletePurchaseBill(bill.id) 
-                            : handleDeleteSaleBill(bill.id)}
-                          variant="destructive"
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Delete
-                        </Button>
+                      <div className="flex gap-2 flex-wrap">
+                        {(() => {
+                          const total = Number(bill.total_amount) || 0
+                          const paid = Number(bill.amount_paid) || 0
+                          const remaining = total - paid
+                          
+                          return (
+                            <>
+                              {remaining > 0 && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => billType === 'purchase'
+                                    ? handleMarkPurchaseBillAsPaid(bill.id)
+                                    : handleMarkSaleBillAsPaid(bill.id)}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Mark Paid
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                onClick={() => billType === 'purchase' 
+                                  ? generatePurchasePDF(bill as PurchaseBillData) 
+                                  : generateSalePDF(bill as SaleBillData)}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                              >
+                                <Download className="w-4 h-4 mr-1" />
+                                PDF
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => billType === 'purchase' 
+                                  ? handleDeletePurchaseBill(bill.id) 
+                                  : handleDeleteSaleBill(bill.id)}
+                                variant="destructive"
+                              >
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Delete
+                              </Button>
+                            </>
+                          )
+                        })()}
                       </div>
                     </td>
                   </tr>
