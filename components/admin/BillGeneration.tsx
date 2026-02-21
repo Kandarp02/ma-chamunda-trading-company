@@ -563,23 +563,33 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
 
   // PDF generation handlers
   const generatePurchasePDF = async (bill: PurchaseBillData) => {
-    const pdfData = await pdfGenerator.generatePurchaseBill(bill)
-    const link = document.createElement('a')
-    link.href = pdfData
-    link.download = `Purchase_Bill_P${bill.id}.pdf`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    try {
+      const pdfData = await pdfGenerator.generatePurchaseBill(bill)
+      const link = document.createElement('a')
+      link.href = pdfData
+      link.download = `Purchase_Bill_P${bill.id}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch (error) {
+      console.error('Error generating purchase PDF:', error)
+      alert('Failed to generate PDF. Please try again or disable browser extensions.')
+    }
   }
 
   const generateSalePDF = async (bill: SaleBillData) => {
-    const pdfData = await pdfGenerator.generateSaleBill(bill)
-    const link = document.createElement('a')
-    link.href = pdfData
-    link.download = `Sale_Bill_S${bill.id}.pdf`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    try {
+      const pdfData = await pdfGenerator.generateSaleBill(bill)
+      const link = document.createElement('a')
+      link.href = pdfData
+      link.download = `Sale_Bill_S${bill.id}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch (error) {
+      console.error('Error generating sale PDF:', error)
+      alert('Failed to generate PDF. Please try again or disable browser extensions.')
+    }
   }
 
   const currentForm = billType === 'purchase' ? purchaseForm : saleForm
