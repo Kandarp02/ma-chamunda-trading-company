@@ -984,7 +984,7 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
                   <th className="text-left py-3 px-4 text-card-foreground font-semibold">
                     {billType === 'purchase' ? 'Farmer Name' : 'Shop Name'}
                   </th>
-                  <th className="text-left py-3 px-4 text-card-foreground font-semibold">Items</th>
+                  <th className="text-left py-3 px-4 text-card-foreground font-semibold">Mobile</th>
                   <th className="text-left py-3 px-4 text-card-foreground font-semibold">Items Total</th>
                   <th className="text-left py-3 px-4 text-card-foreground font-semibold">Charges</th>
                   <th className="text-left py-3 px-4 text-card-foreground font-semibold">Grand Total</th>
@@ -1004,7 +1004,7 @@ export default function BillGeneration({ stocks, setStocks }: BillGenerationProp
                       {billType === 'purchase' ? bill.farmer_name : bill.shop_name}
                     </td>
                     <td className="py-3 px-4 text-foreground">
-                      {bill.items?.length || 1} item(s)
+                      {bill.mobile_number || 'N/A'}
                     </td>
                     <td className="py-3 px-4 text-amber-700 font-bold">
                       ₹{(() => {
