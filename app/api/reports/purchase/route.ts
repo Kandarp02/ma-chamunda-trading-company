@@ -158,8 +158,11 @@ export async function GET(request: NextRequest) {
         `${index + 1}. ${item.crop_name} – Qty: ${item.quantity}, Rate: ₹${item.rate}, Amount: ₹${item.item_total}`
       ).join('\n_____________________________________\n');
       
-      // Calculate subtotal (sum of all items) - ensure all values are numbers
-      const subtotal = bill.items.reduce((sum: number, item: any) => sum + (Number(item.item_total) || 0), 0);
+      // Calculate subtotal (sum of all items) - ensure all values are properly parsed as numbers
+      const subtotal = bill.items.reduce((sum: number, item: any) => {
+        const itemTotal = parseFloat(item.item_total) || 0;
+        return sum + itemTotal;
+      }, 0);
       
       groupedData[monthKey].push({
         'Date': formatDate(bill.bill_date),
