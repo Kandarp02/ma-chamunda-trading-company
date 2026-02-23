@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
-import { LOGO_BASE64 } from './logo-data';
+import fs from 'fs';
+import path from 'path';
 
 export interface BillItem {
   crop_name: string;
@@ -78,16 +79,19 @@ export class PDFGenerator {
 
   private addLogo(centerX: number) {
     try {
-      // Add logo image directly from embedded base64 - 20x20mm at center
-      this.doc.addImage(LOGO_BASE64, 'PNG', centerX - 10, 12, 20, 20);
+      // Read logo file dynamically and convert to base64
+      const logoPath = path.join(process.cwd(), 'public', 'logo.jpg');
+      const logoBuffer = fs.readFileSync(logoPath);
+      const logoBase64 = `data:image/jpeg;base64,${logoBuffer.toString('base64')}`;
+      
+      // Add logo image - 20x20mm at center
+      this.doc.addImage(logoBase64, 'JPEG', centerX - 10, 12, 20, 20);
     } catch (error) {
       // Fallback: draw placeholder if logo fails to load
       this.doc.setDrawColor(0);
-      this.doc.setLineWidth(1);
-      this.doc.circle(centerX, 22, 10, 'S');
-      this.doc.circle(centerX, 19, 3, 'S');
-      this.doc.setLineWidth(0.5);
-      this.doc.ellipse(centerX, 26, 5, 2.5, 'S');
+      this.doc.rect(centerX - 10, 12, 20, 20, 'S');
+      this.doc.setFontSize(8);
+      this.doc.text('LOGO', centerX - 5, 22);
     }
   }
 
