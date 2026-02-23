@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Chamunda Mata Traders | Premium Textile & Fabric Solutions',
-  description: 'Premium quality fabrics and textiles for diverse applications. Explore our extensive collection of cotton, silk, linen, and blended fabrics.',
+  title: 'Chamunda Mata Traders | Premium Crop Trading Solutions',
+  description: 'Premium quality crops available at best rate. Explore our extensive collection of cereals, pulses, and cotton.',
   generator: 'v0.app',
 }
 
