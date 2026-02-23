@@ -85,7 +85,7 @@ export function ProductsSection() {
             </h2>
           </FloatingElement3D>
           <p className="text-lg text-amber-700 max-w-2xl mx-auto">
-            Browse our extensive range of high-quality fabrics and textiles
+            Browse our extensive range of high-quality crops
           </p>
         </motion.div>
 

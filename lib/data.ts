@@ -26,7 +26,7 @@ export const products = [
 
   {
     id: 4,
-    name: 'jowar',
+    name: 'Jowar',
     category: 'Cereals',
     description: 'Nutritious jowar grains with superior fiber content, perfect for health and food markets.',
     image: '/images/jowar.jpg',
@@ -52,8 +52,8 @@ export const products = [
     id: 7,
     name: 'Moong',
     category: 'Pulses',
-    description: 'Hardy bajra grains rich in minerals, ideal for sustainable farming and consumption.',
-    image: '/images/bajra.jpg',
+    description: 'Premium quality whole green moong with high protein content, excellent taste, and ideal for dals, sprouts, and healthy food preparations.',
+    image: '/images/moong.jpg',
     price: 'Market Rate',
   },
   {

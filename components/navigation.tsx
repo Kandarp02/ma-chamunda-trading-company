@@ -31,7 +31,7 @@ export function Navigation() {
             transition={{ duration: 0.3 }}
             className="flex items-center gap-2 font-bold text-lg sm:text-xl md:text-2xl text-amber-700 truncate"
           >
-            <img src="/logo.png" alt="Logo" className="h-8 w-8 sm:h-10 sm:w-10 object-contain" />
+            <img src="/lono.jpg" alt="Logo" className="h-8 w-8 sm:h-10 sm:w-10 object-contain" />
             <span className="hidden sm:inline">MA CHAMUNDA TRADING COMPANY</span>
             <span className="sm:hidden">CMT</span>
           </motion.div>
