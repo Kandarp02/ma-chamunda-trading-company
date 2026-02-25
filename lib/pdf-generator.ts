@@ -1,6 +1,4 @@
 import jsPDF from 'jspdf';
-import fs from 'fs';
-import path from 'path';
 
 export interface BillItem {
   crop_name: string;
@@ -77,12 +75,16 @@ export class PDFGenerator {
     this.doc.rect(margin, margin, pageWidth - (margin * 2), pageHeight - (margin * 2), 'S');
   }
 
-  private addLogo(centerX: number) {
+  private async addLogo(centerX: number) {
     try {
-      // Read logo file dynamically and convert to base64
-      const logoPath = path.join(process.cwd(), 'public', 'logo.jpg');
-      const logoBuffer = fs.readFileSync(logoPath);
-      const logoBase64 = `data:image/jpeg;base64,${logoBuffer.toString('base64')}`;
+      // Fetch logo image and convert to base64
+      const response = await fetch('/logo.jpg');
+      const blob = await response.blob();
+      const logoBase64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
       
       // Add logo image - 20x20mm at center
       this.doc.addImage(logoBase64, 'JPEG', centerX - 10, 12, 20, 20);
@@ -100,7 +102,7 @@ export class PDFGenerator {
     const centerX = pageWidth / 2;
     
     // Add logo image
-    this.addLogo(centerX);
+    await this.addLogo(centerX);
     
     // Company Name
     this.doc.setFontSize(14);
