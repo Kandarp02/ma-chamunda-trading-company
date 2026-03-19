@@ -7,11 +7,8 @@
   <tr>
     <td><a href="https://ma-chamunda-trading-company.vercel.app"><img src="https://img.shields.io/badge/🚀-Live%20Demo-4CAF50?style=for-the-badge" alt="Live Demo"></a></td>
     <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company"><img src="https://img.shields.io/badge/📦-View%20Code-181717?style=for-the-badge" alt="View Code"></a></td>
-    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/fork"><img src="https://img.shields.io/badge/🍴-Fork%20Repo-6f42c1?style=for-the-badge" alt="Fork Repo"></a></td>
   </tr>
   <tr>
-    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/issues"><img src="https://img.shields.io/badge/🐛-Report%20Bug-ff6b6b?style=for-the-badge" alt="Report Bug"></a></td>
-    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/issues/new"><img src="https://img.shields.io/badge/💡-Request%20Feature-007bff?style=for-the-badge" alt="Request Feature"></a></td>
     <td><a href="LICENSE"><img src="https://img.shields.io/badge/📄-MIT%20License-ffc107?style=for-the-badge" alt="License"></a></td>
   </tr>
 </table>
@@ -523,7 +520,7 @@ copies or substantial portions of the Software.
 
 
 ### 🌐 Social
-- 💼 LinkedIn: [Company Page](www.linkedin.com/in/kandarp02)
+- 💼 LinkedIn: [Kandarp Patil](www.linkedin.com/in/kandarp02)
 
 ---
 
