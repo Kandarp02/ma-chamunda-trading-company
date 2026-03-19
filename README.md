@@ -451,27 +451,6 @@ npm run build
 npm start
 ```
 
----
-
-## 📸 Screenshots
-
-### 🏠 Dashboard
-![Dashboard](https://i.imgur.com/placeholder-dashboard.png)
-*Modern dashboard with quick stats and navigation*
-
-### 📋 Bill Management
-![Bill Management](https://i.imgur.com/placeholder-bills.png)
-*Comprehensive bill creation and management interface*
-
-### 📊 Reports
-![Reports](https://i.imgur.com/placeholder-reports.png)
-*Advanced reporting with Excel and PDF generation*
-
-### 📱 Mobile View
-![Mobile View](https://i.imgur.com/placeholder-mobile.png)
-*Fully responsive mobile interface*
-
----
 
 ## 🤝 Contributing
 
@@ -538,21 +517,13 @@ copies or substantial portions of the Software.
 ## 📞 Contact
 
 ### 👤 Developer
-**Kandarp Patel**
-- 📧 Email: tradingmachamunda@gmail.com
-- 📱 Phone: +91 7709294093
-- 🌐 Website: [ma-chamunda-trading-company.vercel.app](https://ma-chamunda-trading-company.vercel.app)
+**Kandarp Patil**
+- 📧 Email: kandarppatil2@gmail.com
+- 🌐 Website: [kandarp-patil-portfolio.vercel.app](https://kandarp-patil-portfolio.vercel.app/)
 
-### 🏢 Business
-**MA CHAMUNDA TRADING COMPANY**
-- 📍 Address: Pimpri, Maharashtra, India
-- 📧 Email: tradingmachamunda@gmail.com
-- 📱 Phone: +91 7709294093
 
 ### 🌐 Social
-- 🐦 Twitter: [@company_handle](https://twitter.com/company_handle)
-- 💼 LinkedIn: [Company Page](https://linkedin.com/company/company)
-- 📷 Instagram: [@company_instagram](https://instagram.com/company_instagram)
+- 💼 LinkedIn: [Company Page](www.linkedin.com/in/kandarp02)
 
 ---
 
