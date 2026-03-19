@@ -517,7 +517,7 @@ copies or substantial portions of the Software.
 
 
 ### 🌐 Social
-- 💼 LinkedIn: [Kandarp Patil](www.linkedin.com/in/kandarp02)
+- 💼 LinkedIn: [Kandarp Patil](https://www.linkedin.com/in/kandarp02/)
 
 ---
 
