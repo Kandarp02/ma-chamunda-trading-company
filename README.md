@@ -550,14 +550,18 @@ copies or substantial portions of the Software.
 - 📧 Email: tradingmachamunda@gmail.com
 - 📱 Phone: +91 7709294093
 
-### 🌐 Social
-- 🐦 Twitter: [@company_handle](https://twitter.com/company_handle)
-- 💼 LinkedIn: [Company Page](https://linkedin.com/company/company)
-- 📷 Instagram: [@company_instagram](https://instagram.com/company_instagram)
-
 ---
 
 <div align="center">
+
+## � Quick Actions
+
+[![Live Demo](https://img.shields.io/badge/🌐-Live%20Demo-green?style=for-the-badge&logo=vercel)](https://ma-chamunda-trading-company.vercel.app)
+[![View Code](https://img.shields.io/badge/📂-View%20Code-blue?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company)
+[![Report Bug](https://img.shields.io/badge/�-Report%20Bug-red?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company/issues)
+[![Request Feature](https://img.shields.io/badge/💡-Request%20Feature-purple?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company/issues/new)
+
+---
 
 **⭐ Star this repository if it helped you!**
 
