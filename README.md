@@ -8,9 +8,6 @@
     <td><a href="https://ma-chamunda-trading-company.vercel.app"><img src="https://img.shields.io/badge/🚀-Live%20Demo-4CAF50?style=for-the-badge" alt="Live Demo"></a></td>
     <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company"><img src="https://img.shields.io/badge/📦-View%20Code-181717?style=for-the-badge" alt="View Code"></a></td>
   </tr>
-  <tr>
-    <td><a href="LICENSE"><img src="https://img.shields.io/badge/📄-MIT%20License-ffc107?style=for-the-badge" alt="License"></a></td>
-  </tr>
 </table>
 
 **🚀 Streamlining Agricultural Trading with Modern Technology**
