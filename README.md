@@ -525,7 +525,7 @@ copies or substantial portions of the Software.
 
 **⭐ Star this repository if it helped you!**
 
-Made with ❤️ by [Kandarp Patel](https://github.com/Kandarp02)
+Made with ❤️ by [Kandarp Patil](https://github.com/Kandarp02)
 
 [![Back to top](https://img.shields.io/badge/Back%20to%20Top-↑-blue?style=for-the-badge)](#-ma-chamunda-trading-company)
 
