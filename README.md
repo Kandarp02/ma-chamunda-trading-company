@@ -3,21 +3,20 @@
 
 <div align="center">
 
-[![Next.js](https://img.shields.io/badge/Next.js-14.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-18.2-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=for-the-badge&logo=postgresql)](https://supabase.com/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
-
-[![Live Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://ma-chamunda-trading-company.vercel.app)
-[![GitHub Stars](https://img.shields.io/github/stars/Kandarp02/ma-chamunda-trading-company?style=for-the-badge)](https://github.com/Kandarp02/ma-chamunda-trading-company)
-[![GitHub Forks](https://img.shields.io/github/forks/Kandarp02/ma-chamunda-trading-company?style=for-the-badge)](https://github.com/Kandarp02/ma-chamunda-trading-company/fork)
-[![License](https://img.shields.io/github/license/Kandarp02/ma-chamunda-trading-company?style=for-the-badge)](LICENSE)
+<table>
+  <tr>
+    <td><a href="https://ma-chamunda-trading-company.vercel.app"><img src="https://img.shields.io/badge/🚀-Live%20Demo-4CAF50?style=for-the-badge" alt="Live Demo"></a></td>
+    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company"><img src="https://img.shields.io/badge/📦-View%20Code-181717?style=for-the-badge" alt="View Code"></a></td>
+    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/fork"><img src="https://img.shields.io/badge/🍴-Fork%20Repo-6f42c1?style=for-the-badge" alt="Fork Repo"></a></td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/issues"><img src="https://img.shields.io/badge/🐛-Report%20Bug-ff6b6b?style=for-the-badge" alt="Report Bug"></a></td>
+    <td><a href="https://github.com/Kandarp02/ma-chamunda-trading-company/issues/new"><img src="https://img.shields.io/badge/💡-Request%20Feature-007bff?style=for-the-badge" alt="Request Feature"></a></td>
+    <td><a href="LICENSE"><img src="https://img.shields.io/badge/📄-MIT%20License-ffc107?style=for-the-badge" alt="License"></a></td>
+  </tr>
+</table>
 
 **🚀 Streamlining Agricultural Trading with Modern Technology**
-
-[View Live Demo](https://ma-chamunda-trading-company.vercel.app) • [Report Bug](https://github.com/Kandarp02/ma-chamunda-trading-company/issues) • [Request Feature](https://github.com/Kandarp02/ma-chamunda-trading-company/issues/new)
 
 </div>
 
@@ -550,18 +549,14 @@ copies or substantial portions of the Software.
 - 📧 Email: tradingmachamunda@gmail.com
 - 📱 Phone: +91 7709294093
 
+### 🌐 Social
+- 🐦 Twitter: [@company_handle](https://twitter.com/company_handle)
+- 💼 LinkedIn: [Company Page](https://linkedin.com/company/company)
+- 📷 Instagram: [@company_instagram](https://instagram.com/company_instagram)
+
 ---
 
 <div align="center">
-
-## � Quick Actions
-
-[![Live Demo](https://img.shields.io/badge/🌐-Live%20Demo-green?style=for-the-badge&logo=vercel)](https://ma-chamunda-trading-company.vercel.app)
-[![View Code](https://img.shields.io/badge/📂-View%20Code-blue?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company)
-[![Report Bug](https://img.shields.io/badge/�-Report%20Bug-red?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company/issues)
-[![Request Feature](https://img.shields.io/badge/💡-Request%20Feature-purple?style=for-the-badge&logo=github)](https://github.com/Kandarp02/ma-chamunda-trading-company/issues/new)
-
----
 
 **⭐ Star this repository if it helped you!**
 
