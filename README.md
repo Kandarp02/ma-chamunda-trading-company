@@ -457,19 +457,19 @@ npm start
 ## 📸 Screenshots
 
 ### 🏠 Dashboard
-![Dashboard](https://via.placeholder.com/800x400/1a1a2e/16213e?text=Dashboard+View)
+![Dashboard](https://i.imgur.com/placeholder-dashboard.png)
 *Modern dashboard with quick stats and navigation*
 
 ### 📋 Bill Management
-![Bill Management](https://via.placeholder.com/800x400/1a1a2e/16213e?text=Bill+Management)
+![Bill Management](https://i.imgur.com/placeholder-bills.png)
 *Comprehensive bill creation and management interface*
 
 ### 📊 Reports
-![Reports](https://via.placeholder.com/800x400/1a1a2e/16213e?text=Analytics+Reports)
+![Reports](https://i.imgur.com/placeholder-reports.png)
 *Advanced reporting with Excel and PDF generation*
 
 ### 📱 Mobile View
-![Mobile View](https://via.placeholder.com/400x700/1a1a2e/16213e?text=Mobile+Responsive)
+![Mobile View](https://i.imgur.com/placeholder-mobile.png)
 *Fully responsive mobile interface*
 
 ---
@@ -554,16 +554,6 @@ copies or substantial portions of the Software.
 - 🐦 Twitter: [@company_handle](https://twitter.com/company_handle)
 - 💼 LinkedIn: [Company Page](https://linkedin.com/company/company)
 - 📷 Instagram: [@company_instagram](https://instagram.com/company_instagram)
-
----
-
-## 🙏 Acknowledgments
-
-- **[Next.js](https://nextjs.org/)** - The React framework for production
-- **[Supabase](https://supabase.com/)** - Open source Firebase alternative
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[jsPDF](https://github.com/parallax/jsPDF)** - PDF generation library
-- **[xlsx](https://github.com/SheetJS/sheetjs)** - Excel spreadsheet library
 
 ---
 
